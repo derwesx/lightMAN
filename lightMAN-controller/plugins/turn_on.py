@@ -8,6 +8,7 @@ class TurnOnPlugin(Plugin):
     brightness = 255
 
     def __init__(self, node_id):
+        self.connections = []
         self.node_id = node_id
 
     def proceed_data(self, projectors: typing.List[Projector]):

@@ -8,12 +8,12 @@ from plugins.plugin import Plugin
 class BlinkPlugin(Plugin):
     time_per_cycle = 2
     brightness = 255
-    count_of_groups = 3  # ONLY WITH turn_one = False,
+    count_of_groups = 4  # ONLY WITH turn_one = False,
     # count_of_groups = From 1 to infinity, amount of groups projectors being divided into
     turn_one = False
 
     def __init__(self, node_id):
-        self.connections =  []
+        self.connections = []
         self.node_id = node_id
         self.start_time = time.perf_counter()
 
