@@ -20,7 +20,7 @@ PLUGIN_NAME["set_color"] = "SetColor"
 # <<<--- END OF CREATED PLUGINS --->>>
 
 def get_new_id():
-    return uuid.uuid4()
+    return str(uuid.uuid4())
 
 
 class Controller:
@@ -28,6 +28,7 @@ class Controller:
     environments = []
     scenes = []
     current_scene_id = None
+    updates_counter = 0
 
     def __init__(self):
         self.sender = sacn.sACNsender(fps=60)
@@ -38,6 +39,12 @@ class Controller:
 
     def start(self):
         self.update_thread.run()
+
+    def get_node_by_id(self, node_id):
+        for node in self.nodes:
+            if node.node_id == node_id:
+                return node
+        return None
 
     def create_plugin(self, type: str):
         plugin = importlib.import_module(type)
@@ -71,13 +78,13 @@ class Controller:
     def delete_node(self, node_id):
         for node in self.nodes:
             if node.id == node_id:
-                del node
+                self.nodes.remove(node)
         for node in self.environments:
             if node.id == node_id:
-                del node
+                self.environments.remove(node)
         for node in self.scenes:
             if node.id == node_id:
-                del node
+                self.scenes.remove(node)
         if len(self.scenes) == 0:
             self.current_scene_id = None
 
@@ -107,15 +114,15 @@ class Controller:
                 to_node = node
         if from_node is None or to_node is None:
             raise Exception("Node not found")
-        from_node.remove(to_node)
+        from_node.connections.remove(to_node)
 
     def update(self):
         while True:
+            self.updates_counter += 1
             for environment in self.environments:
                 environment.proceed_data()
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
-                    # print(scene.get_data())
                     self.sender[1].dmx_data = scene.get_data()[1:] + [0]
                 # UPDATE FRONTEND
                 scene.end_cycle()

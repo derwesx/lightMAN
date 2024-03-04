@@ -1,3 +1,5 @@
+import logging
+
 from classes.scene import Scene
 from classes.projector import Projector
 
@@ -18,16 +20,17 @@ class Environment:
         self.__scene.load()
 
     def add(self, projector_id: int):
+        projector_id = int(projector_id)
         for projector in self.__scene.projectors:
-            if projector.id == projector_id:
+            if int(projector.id) == int(projector_id):
                 self.projectors.append(projector)
                 break
 
     def delete(self, projector_id: int):
         for projector in self.projectors:
-            if projector.id == projector_id:
+            if int(projector.id) == int(projector_id):
                 projector.in_use = False
-                del projector
+                self.projectors.remove(projector)
                 break
 
     def proceed_data(self):
