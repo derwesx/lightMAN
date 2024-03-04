@@ -1,5 +1,2 @@
-export const nodes = [
-
-];
-
+export const nodes = [];
 export const edges = [];

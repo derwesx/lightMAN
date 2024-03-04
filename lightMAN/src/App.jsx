@@ -15,7 +15,11 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 import {nodes as initialNodes, edges as initialEdges} from './nodes-edges';
-import {blink_node} from "./nodes/blink.js";
+import {blink} from "./nodes/plugins/blink.js";
+import {default_node} from "./nodes/plugins/default_node.js";
+import {scene} from "./nodes/scene.js";
+import {translator} from "./nodes/translator.js";
+import {environment} from "./nodes/environment.js";
 
 function App() {
     const reactFlowWrapper = useRef(null);
@@ -104,128 +108,19 @@ function App() {
         edgeUpdateSuccessful.current = true;
     }, []);
 
-    // I HAVE NO IDEA HOW TO MAKE IT BEAUTY
-    const createNewEnvironment = () => {
-        const request = new XMLHttpRequest();
-        request.open("GET", "http://localhost:8989/api/create_environment", false);
-        request.send(null);
-        const node_id = JSON.parse(request.responseText)["node_id"];
-        const newNode = {
-            id: node_id,
-            type: "input",
-            position: screenToFlowPosition({
-                x: 100,
-                y: 100,
-            }),
-            data: {label: `Environment ${node_id}`},
-            origin: [0.5, 0.0],
-            style: {
-                background: '#FFFFFF',
-                color: '#333',
-                border: '1px solid #222138',
-                width: 180,
-            },
-        };
-        setNodes((nds) => nds.concat(newNode));
-    };
-    const createNewTranslator = () => {
-        const request = new XMLHttpRequest();
-        request.open("GET", "http://localhost:8989/api/create_translator", false);
-        request.send(null);
-        const node_id = JSON.parse(request.responseText)["node_id"];
-        const newNode = {
-            id: node_id,
-            position: screenToFlowPosition({
-                x: 100,
-                y: 100,
-            }),
-            data: {label: `Translator ${node_id}`},
-            origin: [0.5, 0.0],
-            style: {
-                background: '#2FFFFF',
-                color: '#333',
-                border: '1px solid #222138',
-                width: 180,
-            },
-        };
-        setNodes((nds) => nds.concat(newNode));
-    };
-    const createNewScene = () => {
-        const request = new XMLHttpRequest();
-        request.open("GET", "http://localhost:8989/api/create_scene", false);
-        request.send(null);
-        const node_id = JSON.parse(request.responseText)["node_id"];
-        const newNode = {
-            id: node_id,
-            type: "output",
-            position: screenToFlowPosition({
-                x: 100,
-                y: 100,
-            }),
-            data: {label: `Scene ${node_id}`},
-            origin: [0.5, 0.0],
-            style: {
-                background: '#AAAAAA',
-                color: '#333',
-                border: '1px solid #222138',
-                width: 180,
-            },
-        };
-        setNodes((nds) => nds.concat(newNode));
-    };
-    const createNewPluginTO = () => {
-        const request = new XMLHttpRequest();
-        request.open("POST", "http://localhost:8989/api/create_plugin?type=turn_on", false);
-        request.send(null);
-        const node_id = JSON.parse(request.responseText)["node_id"];
-        const newNode = {
-            id: node_id,
-            position: screenToFlowPosition({
-                x: 100,
-                y: 100,
-            }),
-            data: {label: `TurnOn ${node_id}`},
-            origin: [0.5, 0.0],
-            style: {
-                background: '#F0F0F0',
-                color: '#333',
-                border: '1px solid #222138',
-                width: 180,
-            },
-        };
-        setNodes((nds) => nds.concat(newNode));
-    };
+    const createNewNode = (event) => {
 
-    const createNewPluginB = () => {
-
+        const node_name = event.target.getAttribute('value');
         const request = new XMLHttpRequest();
-        request.open("POST", "http://localhost:8989/api/create_plugin?type=blink", false);
+        request.open("GET", `http://localhost:8989/api/create_node?type=${node_name}`, false);
         request.send(null);
         const node_id = JSON.parse(request.responseText)["node_id"];
-        let name = "blink_node";
-        const newNode = eval(`${name}(node_id, screenToFlowPosition)`);
-        setNodes((nds) => nds.concat(newNode));
-    };
-    const createNewPluginSC = () => {
-        const request = new XMLHttpRequest();
-        request.open("POST", "http://localhost:8989/api/create_plugin?type=set_color", false);
-        request.send(null);
-        const node_id = JSON.parse(request.responseText)["node_id"];
-        const newNode = {
-            id: node_id,
-            position: screenToFlowPosition({
-                x: 100,
-                y: 100,
-            }),
-            data: {label: `SetColor ${node_id}`},
-            origin: [0.5, 0.0],
-            style: {
-                background: '#FAD0F0',
-                color: '#333',
-                border: '1px solid #222138',
-                width: 180,
-            },
-        };
+        let newNode;
+        try {
+            newNode = eval(`${node_name}(node_id, screenToFlowPosition)`);
+        } catch (e) {
+            newNode = default_node(node_id, screenToFlowPosition, node_name)
+        }
         setNodes((nds) => nds.concat(newNode));
     };
     const start = () => {
@@ -233,16 +128,17 @@ function App() {
         request.open("GET", "http://localhost:8989/api/start", true);
         request.send(null);
     };
-    //////////////////////////////////////////////////////
 
     return (
         <div style={{width: '100vw', height: '100vh'}}>
-            <button onClick={createNewEnvironment}>Environment</button>
-            <button onClick={createNewScene}>Scene</button>
-            <button onClick={createNewTranslator}>Translator</button>
-            <button onClick={createNewPluginTO}>TurnOn</button>
-            <button onClick={createNewPluginB}>Blink</button>
-            <button onClick={createNewPluginSC}>SetColor</button>
+            {/*-------------------Nodes-----------------------*/}
+            <button onClick={createNewNode} value="environment">Environment</button>
+            <button onClick={createNewNode} value="scene">Scene</button>
+            <button onClick={createNewNode} value="translator">Translator</button>
+            <button onClick={createNewNode} value="turn_on">TurnOn</button>
+            <button onClick={createNewNode} value="blink">Blink</button>
+            <button onClick={createNewNode} value="set_color">SetColor</button>
+            {/*-----------------------------------------------*/}
             <button onClick={start}>START</button>
             <ReactFlow
                 nodes={nodes}
