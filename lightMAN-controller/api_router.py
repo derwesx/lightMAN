@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask, request, jsonify, json
+from flask import after_this_request
 
 from controller import Controller
 
@@ -16,6 +17,11 @@ logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 
 @app.get('/api/ping')
 def ping():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     print(mainController.updates_counter)
     print(mainController.current_scene_id)
     print(mainController.get_node_by_id(mainController.current_scene_id).get_data())
@@ -24,6 +30,11 @@ def ping():
 @app.post('/api/environment/add')
 @app.post('/api/environment/delete')
 def add_delete_environment_projectors():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     try:
         node_id = request.args.get('node_id')
         projector_id = request.args.get('projector_id')
@@ -42,9 +53,15 @@ def add_delete_environment_projectors():
 @app.post('/api/connect')
 @app.post('/api/disconnect')
 def connect_nodes():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     try:
         from_node_id = request.args.get('from_node_id')
         to_node_id = request.args.get('to_node_id')
+        logging.info("Connecting/Disconnecting: " + str(from_node_id) + " " + str(to_node_id))
         if str(request.url_rule) == '/api/connect':
             mainController.connect_nodes(from_node_id, to_node_id)
             return jsonify({'status': "Nodes connected successfully"}), 200
@@ -58,6 +75,11 @@ def connect_nodes():
 
 @app.post('/api/delete')
 def delete_node():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     try:
         node_id = request.args.get('node_id')
         mainController.delete_node(node_id)
@@ -72,6 +94,11 @@ def delete_node():
 @app.get('/api/create_scene')
 @app.get('/api/create_translator')
 def create_node():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     try:
         if str(request.url_rule) == '/api/create_plugin':
             plugin_type = request.args.get('type')
@@ -99,6 +126,11 @@ is_on = False
 # Flask is bruh btw
 @app.get('/api/start')
 def start():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
     global is_on
     if is_on is False:
         is_on = True
@@ -109,4 +141,4 @@ def start():
 
 
 mainController = Controller()
-app.run(threaded=True)
+app.run(host='localhost', port=8989, threaded=True)
