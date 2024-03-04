@@ -11,8 +11,10 @@ from plugins import *
 
 # <<<--- CREATED PLUGINS --->>>
 PLUGIN_NAME = dict()
-PLUGIN_NAME["turn_on"] = "TurnOnPlugin"
-PLUGIN_NAME["ramp_up"] = "RampUpPlugin"
+PLUGIN_NAME["turn_on"] = "TurnOn"
+PLUGIN_NAME["ramp_up"] = "RampUp"
+PLUGIN_NAME["blink"] = "Blink"
+PLUGIN_NAME["set_color"] = "SetColor"
 
 
 # <<<--- END OF CREATED PLUGINS --->>>
@@ -39,7 +41,10 @@ class Controller:
 
     def create_plugin(self, type: str):
         plugin = importlib.import_module(type)
-        class_ = getattr(plugin, PLUGIN_NAME[type])
+        try:
+            class_ = getattr(plugin, PLUGIN_NAME[type] + "Plugin")
+        except Exception as error:
+            raise Exception("All plugins classes should be named as {plugin_name}Plugin")
         plugin_instance = class_(get_new_id())
         self.nodes.append(plugin_instance)
         return plugin_instance
@@ -86,7 +91,11 @@ class Controller:
                 to_node = node
         if from_node is None or to_node is None:
             raise Exception("Node not found")
-        from_node.connections.append(to_node)
+        if to_node in from_node.connections:
+            ...
+            # Nodes are already connected
+        else:
+            from_node.connections.append(to_node)
 
     def disconnect_nodes(self, from_id, to_id):
         from_node = None
@@ -102,11 +111,13 @@ class Controller:
 
     def update(self):
         while True:
-            # time.sleep(0.05)
             for environment in self.environments:
                 environment.proceed_data()
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
-                    self.sender[1].dmx_data = scene.get_data()
+                    print(scene.get_data())
+                    self.sender[1].dmx_data = scene.get_data()[1:] + [0]
                 # UPDATE FRONTEND
                 scene.end_cycle()
+            for environment in self.environments:
+                environment.end_cycle()

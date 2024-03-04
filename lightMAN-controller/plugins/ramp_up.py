@@ -6,10 +6,11 @@ from plugins.plugin import Plugin
 
 
 class RampUpPlugin(Plugin):
-    time_per_cycle = 4
+    time_per_cycle = 3
     brightness = 255
 
     def __init__(self, node_id):
+        self.connections = []
         self.node_id = node_id
         self.start_time = time.perf_counter()
 

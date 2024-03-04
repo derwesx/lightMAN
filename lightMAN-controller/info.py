@@ -6,6 +6,8 @@
 # 3.2 Scene.get_data()
 # 3.3 Scene.end_cycle()
 # 4. Every node has its unique id
+# 5. PLUGIN SHOULD GIVE ONLY MEANINGFUL DMX_CHANNELS DATA
+# RGB parameter does not exist in LIGHT/SPOT, etc.
 # <<<---- Scene ---->>>
 
 # dmx_in attribute: [[dmx_adress, value (0-255)], ...]
