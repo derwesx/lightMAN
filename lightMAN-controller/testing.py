@@ -28,9 +28,7 @@ a.connect_nodes(environment2.node_id, color_plugin2.node_id)
 a.connect_nodes(color_plugin2.node_id, turn_on.node_id)
 a.connect_nodes(turn_on.node_id, translator.node_id)
 
-print(environment.connections)
-print(plugin.connections)
 # Translator -> Scene
-a.connect_nodes(translator.node_id, scene.node_id)
+# a.connect_nodes(translator.node_id, scene.node_id)
 
 a.start()
