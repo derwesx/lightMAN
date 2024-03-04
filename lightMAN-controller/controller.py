@@ -9,12 +9,15 @@ from classes.translator import Translator
 from classes.scene import Scene
 from plugins import *
 
-# <<<--- CREATED PLUGINS --->>>
-PLUGIN_NAME = dict()
-PLUGIN_NAME["turn_on"] = "TurnOn"
-PLUGIN_NAME["ramp_up"] = "RampUp"
-PLUGIN_NAME["blink"] = "Blink"
-PLUGIN_NAME["set_color"] = "SetColor"
+# <<<--- CREATED NODES --->>>
+NODE_NAME = dict()
+NODE_NAME["turn_on"] = "TurnOnPlugin"
+NODE_NAME["ramp_up"] = "RampUpPlugin"
+NODE_NAME["blink"] = "BlinkPlugin"
+NODE_NAME["set_color"] = "SetColorPlugin"
+NODE_NAME["environment"] = "Environment"
+NODE_NAME["scene"] = "Scene"
+NODE_NAME["translator"] = "Translator"
 
 
 # <<<--- END OF CREATED PLUGINS --->>>
@@ -49,31 +52,16 @@ class Controller:
     def create_plugin(self, type: str):
         plugin = importlib.import_module(type)
         try:
-            class_ = getattr(plugin, PLUGIN_NAME[type] + "Plugin")
+            class_ = getattr(plugin, NODE_NAME[type])
         except Exception as error:
-            raise Exception("All plugins classes should be named as {plugin_name}Plugin")
+            raise Exception("Class: " + str(type) + " not found.")
         plugin_instance = class_(get_new_id())
         self.nodes.append(plugin_instance)
+        if type == "env":
+            self.environments.append(plugin_instance)
+        if type == "scene" and self.current_scene_id is None:
+            self.current_scene_id = plugin_instance.node_id
         return plugin_instance
-
-    def create_environment(self):
-        new_environment = Environment(get_new_id())
-        self.environments.append(new_environment)
-        self.nodes.append(new_environment)
-        return new_environment
-
-    def create_scene(self):
-        new_scene = Scene(get_new_id())
-        self.scenes.append(new_scene)
-        self.nodes.append(new_scene)
-        if self.current_scene_id is None:
-            self.current_scene_id = new_scene.node_id
-        return new_scene
-
-    def create_translator(self):
-        new_translator = Translator(get_new_id())
-        self.nodes.append(new_translator)
-        return new_translator
 
     def delete_node(self, node_id):
         for node in self.nodes:

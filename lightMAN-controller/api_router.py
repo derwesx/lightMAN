@@ -89,10 +89,7 @@ def delete_node():
         return jsonify({'reason': "Unexpected error"}), 401
 
 
-@app.post('/api/create_plugin')
-@app.get('/api/create_environment')
-@app.get('/api/create_scene')
-@app.get('/api/create_translator')
+@app.get('/api/create_node')
 def create_node():
     @after_this_request
     def add_header(response):
@@ -100,21 +97,9 @@ def create_node():
         return response
 
     try:
-        if str(request.url_rule) == '/api/create_plugin':
-            plugin_type = request.args.get('type')
-            new_plugin = mainController.create_plugin(plugin_type)
-            return jsonify({'node_id': new_plugin.node_id}), 200
-        elif str(request.url_rule) == '/api/create_environment':
-            new_environment = mainController.create_environment()
-            return jsonify({'node_id': new_environment.node_id})
-        elif str(request.url_rule) == '/api/create_scene':
-            new_scene = mainController.create_scene()
-            return jsonify({'node_id': new_scene.node_id})
-        elif str(request.url_rule) == '/api/create_translator':
-            new_translator = mainController.create_translator()
-            return jsonify({'node_id': new_translator.node_id})
-        else:
-            return jsonify({'reason': "Unknown node type"}), 404
+        node_type = request.args.get('type')
+        new_node = mainController.create_plugin(node_type)
+        return jsonify({'node_id': new_node.node_id}), 200
     except Exception as error:
         logging.info("Unexpected error: " + str(error))
         return jsonify({'reason': "Unexpected error"}), 401
