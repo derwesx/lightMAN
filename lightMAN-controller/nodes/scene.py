@@ -24,7 +24,7 @@ class Scene:
                 self.projectors.append(Led(projector_id, dmx_start))
             elif projector_type == 'light':
                 self.projectors.append(Light(projector_id, dmx_start))
-            elif projector_type == 'wash':
+            elif projector_type == 'wash' or projector_type == 'washS':
                 self.projectors.append(Wash(projector_id, dmx_start))
             elif projector_type == 'spot':
                 self.projectors.append(Spot(projector_id, dmx_start))

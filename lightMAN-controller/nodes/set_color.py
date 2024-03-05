@@ -1,3 +1,4 @@
+import logging
 import random
 import typing
 import time
@@ -11,9 +12,9 @@ from plugin import Plugin
 
 class SetColorPlugin(Plugin):
     time_per_cycle = 3
-    R = 100
+    R = 255
     G = 255
-    B = 0
+    B = 255
     random_color = False
 
     def __init__(self, node_id):

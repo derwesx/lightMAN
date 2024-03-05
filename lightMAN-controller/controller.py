@@ -1,3 +1,4 @@
+import logging
 from threading import Thread
 import importlib
 import time
@@ -5,8 +6,8 @@ import uuid
 
 import sacn
 
-
 from nodes import *
+
 # <<<--- CREATED NODES --->>>
 NODE_NAME = dict()
 NODE_NAME["turn_on"] = "TurnOnPlugin"
@@ -55,10 +56,12 @@ class Controller:
             raise Exception("Node: " + str(NODE_NAME[node_type]) + " not found.")
         plugin_instance = class_(get_new_id())
         self.nodes.append(plugin_instance)
-        if type == "environment":
+        if node_type == "environment":
             self.environments.append(plugin_instance)
-        if type == "scene" and self.current_scene_id is None:
+        if node_type == "scene" and self.current_scene_id is None:
             self.current_scene_id = plugin_instance.node_id
+        if node_type == "scene":
+            self.scenes.append(plugin_instance)
         return plugin_instance
 
     def delete_node(self, node_id):
