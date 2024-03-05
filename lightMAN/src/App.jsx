@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import {useState, useCallback, useRef} from 'react';
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -15,20 +15,27 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 
 import {nodes as initialNodes, edges as initialEdges} from './nodes-edges';
-import {blink} from "./nodes/plugins/blink.js";
-import {default_node} from "./nodes/plugins/default_node.js";
+//<------------------NODES-------------------------->
+import {default_node} from "./nodes/default_node.js";
+import {blink} from "./nodes/blink.js";
 import {scene} from "./nodes/scene.js";
+import {set_color} from "./nodes/set_color.jsx";
+import {ColorNode} from "./nodes/set_color.jsx"
 import {translator} from "./nodes/translator.js";
 import {environment} from "./nodes/environment.js";
 
+const nodeTypes = {
+    ColorNode: ColorNode,
+};
+
+//<------------------------------------------------->
+
 function App() {
-    const reactFlowWrapper = useRef(null);
     const edgeUpdateSuccessful = useRef(true);
     const connectingNodeId = useRef(null);
     const {screenToFlowPosition} = useReactFlow();
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
     const {getNodes, getEdges} = useReactFlow();
 
     const isValidConnection = useCallback(
@@ -59,10 +66,6 @@ function App() {
         const request = new XMLHttpRequest();
         const req = "?" + "from_node_id=" + source_id + "&to_node_id=" + target_id;
         request.open("POST", "http://localhost:8989/api/connect" + req, false);
-        var data = {
-            "from_node_id": source_id,
-            "to_node_id": target_id
-        }
         request.send(null);
     };
 
@@ -70,10 +73,6 @@ function App() {
         const request = new XMLHttpRequest();
         const req = "?" + "from_node_id=" + source_id + "&to_node_id=" + target_id;
         request.open("POST", "http://localhost:8989/api/disconnect" + req, false);
-        var data = {
-            "from_node_id": source_id,
-            "to_node_id": target_id
-        }
         request.send(null);
     };
     const onConnect = useCallback((params) => {
@@ -89,9 +88,9 @@ function App() {
 
     const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
         edgeUpdateSuccessful.current = true;
-        console.log("Removing: ", oldEdge.source, oldEdge.target)
-        console.log("Adding: ", newConnection.source, newConnection.target)
         if (!(oldEdge.source === newConnection.source && oldEdge.target === newConnection.target)) {
+            console.log("Removing: ", oldEdge.source, oldEdge.target)
+            console.log("Adding: ", newConnection.source, newConnection.target)
             disconnectNodes(oldEdge.source, oldEdge.target);
             connectNodes(newConnection.source, newConnection.target);
         }
@@ -118,6 +117,7 @@ function App() {
         let newNode;
         try {
             newNode = eval(`${node_name}(node_id, screenToFlowPosition)`);
+            // FIX ASAP
         } catch (e) {
             newNode = default_node(node_id, screenToFlowPosition, node_name)
         }
@@ -150,6 +150,7 @@ function App() {
                 onEdgeUpdateEnd={onEdgeUpdateEnd}
                 onConnect={onConnect}
                 isValidConnection={isValidConnection}
+                nodeTypes={nodeTypes}
                 fitView
                 attributionPosition="top-right"
             >
@@ -160,6 +161,7 @@ function App() {
         </div>
     );
 }
+
 
 export default () => (
     <ReactFlowProvider>
