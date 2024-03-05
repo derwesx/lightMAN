@@ -1,4 +1,4 @@
-from classes.projector import *
+from projector import *
 
 
 class Scene:

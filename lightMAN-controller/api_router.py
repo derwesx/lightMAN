@@ -98,7 +98,7 @@ def create_node():
 
     try:
         node_type = request.args.get('type')
-        new_node = mainController.create_plugin(node_type)
+        new_node = mainController.create_node(node_type)
         return jsonify({'node_id': new_node.node_id}), 200
     except Exception as error:
         logging.info("Unexpected error: " + str(error))

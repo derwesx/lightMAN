@@ -1,8 +1,8 @@
 import typing
 import time
 
-from classes.projector import *
-from plugins.plugin import Plugin
+from projector import *
+from plugin import Plugin
 
 
 class BlinkPlugin(Plugin):

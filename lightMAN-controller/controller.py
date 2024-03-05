@@ -1,14 +1,12 @@
-import time
 from threading import Thread
-import sacn
-import uuid
 import importlib
+import time
+import uuid
 
-from classes.environment import Environment
-from classes.translator import Translator
-from classes.scene import Scene
-from plugins import *
+import sacn
 
+
+from nodes import *
 # <<<--- CREATED NODES --->>>
 NODE_NAME = dict()
 NODE_NAME["turn_on"] = "TurnOnPlugin"
@@ -49,15 +47,15 @@ class Controller:
                 return node
         return None
 
-    def create_plugin(self, type: str):
-        plugin = importlib.import_module(type)
+    def create_node(self, node_type: str):
+        plugin = importlib.import_module(node_type)
         try:
-            class_ = getattr(plugin, NODE_NAME[type])
+            class_ = getattr(plugin, NODE_NAME[node_type])
         except Exception as error:
-            raise Exception("Class: " + str(type) + " not found.")
+            raise Exception("Node: " + str(NODE_NAME[node_type]) + " not found.")
         plugin_instance = class_(get_new_id())
         self.nodes.append(plugin_instance)
-        if type == "env":
+        if type == "environment":
             self.environments.append(plugin_instance)
         if type == "scene" and self.current_scene_id is None:
             self.current_scene_id = plugin_instance.node_id
@@ -67,12 +65,10 @@ class Controller:
         for node in self.nodes:
             if node.id == node_id:
                 self.nodes.remove(node)
-        for node in self.environments:
-            if node.id == node_id:
-                self.environments.remove(node)
-        for node in self.scenes:
-            if node.id == node_id:
-                self.scenes.remove(node)
+        if node in self.environments:
+            self.environments.remove(node)
+        if node in self.scenes:
+            self.scenes.remove(node)
         if len(self.scenes) == 0:
             self.current_scene_id = None
 
