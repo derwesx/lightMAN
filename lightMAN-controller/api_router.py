@@ -15,6 +15,7 @@ logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 # app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir="./profile")
 #   < === End of Supplementary Libraries === >
 
+
 @app.get('/api/ping')
 def ping():
     @after_this_request
@@ -25,6 +26,30 @@ def ping():
     print(mainController.updates_counter)
     print(mainController.current_scene_id)
     print(mainController.get_node_by_id(mainController.current_scene_id).get_data())
+
+
+@app.get('/api/change')
+def change():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
+    try:
+        node_id = request.args.get('node_id')
+        params = []
+        for i in request.args:
+            if i != "node_id":
+                params.append([i, request.args[i]])
+        node = mainController.get_node_by_id(node_id)
+        if node is None:
+            return jsonify({"reason": "Node not found"}), 404
+        for key, data in params:
+            exec("node." + str(key) + "=" + str(data))
+        return jsonify({"status": "ok"}), 200
+    except Exception as error:
+        logging.info(str(error))
+        return jsonify({"reason": "idk"}), 404
 
 
 @app.post('/api/environment/add')
