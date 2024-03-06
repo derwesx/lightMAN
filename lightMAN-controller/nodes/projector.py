@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 
+# <<<< AVAILABLE PARAMETERS >>>>
+available_params = ["dim", "color", "r", "g", "b", "pan", "tilt", "pan_speed", "tilt_speed", "focus", "zoom", "shutter"]
+
 
 class Projector:
     in_use = False
@@ -17,10 +20,12 @@ class Projector:
         self.type = type(self).__name__
         self.id = projector_id
         self.data = OrderedDict()
+        for parameter in available_params:
+            self.data[parameter] = {}
+            self.data[parameter]["dmx_channel"] = 0
+            self.data[parameter]["is_changed"] = 0
+            self.data[parameter]["value"] = 0
         self.calculate_channels(dmx_start)
-        for key in self.data:
-            self.data[key]["is_changed"] = 0
-            self.data[key]["value"] = 0
 
     @abstractmethod
     def calculate_channels(self, dmx_start):
@@ -28,10 +33,9 @@ class Projector:
 
 
 class Wash(Projector):
+    keys = ["dim", "zoom", "shutter", "pan", "tilt", "r", "g", "b"]
+
     def calculate_channels(self, dmx_start):
-        keys = ["dim", "zoom", "shutter", "pan", "tilt", "r", "g", "b"]
-        for key in keys:
-            self.data[key] = {}
         self.data["dim"]["dmx_channel"] = dmx_start
         self.data["zoom"]["dmx_channel"] = dmx_start + 2
         self.data["shutter"]["dmx_channel"] = dmx_start + 1
@@ -43,16 +47,17 @@ class Wash(Projector):
 
 
 class Light(Projector):
+    keys = ["dim"]
+
     def calculate_channels(self, dmx_start):
         self.data["dim"] = {}
         self.data["dim"]["dmx_channel"] = dmx_start
 
 
 class Led(Projector):
+    keys = ["dim", "r", "g", "b"]
+
     def calculate_channels(self, dmx_start):
-        keys = ["dim", "r", "g", "b"]
-        for key in keys:
-            self.data[key] = {}
         self.data["dim"]["dmx_channel"] = dmx_start
         self.data["r"]["dmx_channel"] = dmx_start - 3
         self.data["g"]["dmx_channel"] = dmx_start - 2
@@ -60,10 +65,9 @@ class Led(Projector):
 
 
 class Spot(Projector):
+    keys = ["dim", "zoom", "focus", "color", "shutter", "pan", "tilt", "pan_speed", "tilt_speed"]
+
     def calculate_channels(self, dmx_start):
-        keys = ["dim", "zoom", "focus", "color", "shutter", "pan", "tilt", "pan_speed", "tilt_speed"]
-        for key in keys:
-            self.data[key] = {}
         self.data["dim"]["dmx_channel"] = dmx_start
         self.data["zoom"]["dmx_channel"] = dmx_start + 8
         self.data["focus"]["dmx_channel"] = dmx_start + 7

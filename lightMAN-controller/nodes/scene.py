@@ -1,9 +1,12 @@
+import importlib
+import logging
+
 from projector import *
 
 
 class Scene:
     projectors = []
-    dmx_data = [0, ] * 512
+    dmx_data = [0, ] * 513
 
     def __str__(self):
         scene_data = "Scene #" + str(self.node_id)
@@ -20,14 +23,13 @@ class Scene:
         projectors_fetched = cursor.fetchall()
         for projector in projectors_fetched:
             projector_id, projector_type, dmx_start = projector[0], projector[1], projector[3]
-            if projector_type == 'led':
-                self.projectors.append(Led(projector_id, dmx_start))
-            elif projector_type == 'light':
-                self.projectors.append(Light(projector_id, dmx_start))
-            elif projector_type == 'wash' or projector_type == 'washS':
-                self.projectors.append(Wash(projector_id, dmx_start))
-            elif projector_type == 'spot':
-                self.projectors.append(Spot(projector_id, dmx_start))
+            projector_type = projector_type.title()
+            try:
+                projector_module = importlib.import_module("projector")
+                _projector_class = getattr(projector_module, projector_type)
+                self.projectors.append(_projector_class(projector_id, dmx_start))
+            except Exception as error:
+                logging.error("Projector with model: " + projector_type + " not found.\n" + str(error))
 
     def add(self, projector):
         self.projectors.append(projector)

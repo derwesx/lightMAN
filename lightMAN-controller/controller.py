@@ -49,9 +49,9 @@ class Controller:
         return None
 
     def create_node(self, node_type: str):
-        plugin = importlib.import_module(node_type)
+        node_module = importlib.import_module(node_type)
         try:
-            class_ = getattr(plugin, NODE_NAME[node_type])
+            class_ = getattr(node_module, NODE_NAME[node_type])
         except Exception as error:
             raise Exception("Node: " + str(NODE_NAME[node_type]) + " not found.")
         plugin_instance = class_(get_new_id())
@@ -109,7 +109,7 @@ class Controller:
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
                     logging.info("Scene updated:\n" + str(scene.get_data()))
-                    self.sender[1].dmx_data = scene.get_data()[1:] + [0]
+                    self.sender[1].dmx_data = scene.get_data()[1:]
                 # UPDATE FRONTEND
                 scene.end_cycle()
             for environment in self.environments:
