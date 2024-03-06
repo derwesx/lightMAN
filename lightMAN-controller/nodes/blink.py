@@ -45,5 +45,4 @@ class BlinkPlugin(Plugin):
         for projector_id, dmx_value in dim_data:
             projectors[projector_id].data["dim"]["is_changed"] = 1
             projectors[projector_id].data["dim"]["value"] = dmx_value
-        for connected_node in self.connections:
-            connected_node.proceed_data(projectors)
+        self.send_data(projectors)

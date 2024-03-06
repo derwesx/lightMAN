@@ -25,5 +25,4 @@ class RampUpPlugin(Plugin):
         for projector in projectors:
             projector.data["dim"]["is_changed"] = 1
             projector.data["dim"]["value"] = int(time_cor * 255)
-        for connected_node in self.connections:
-            connected_node.proceed_data(projectors)
+        self.send_data(projectors)

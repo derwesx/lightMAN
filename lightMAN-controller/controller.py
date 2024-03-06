@@ -65,24 +65,22 @@ class Controller:
         return plugin_instance
 
     def delete_node(self, node_id):
-        for node in self.nodes:
-            if node.id == node_id:
-                self.nodes.remove(node)
+        node = self.get_node_by_id(node_id)
+        if node is None:
+            raise Exception("Node not found")
+        if node in self.nodes:
+            self.nodes.remove(node)
         if node in self.environments:
             self.environments.remove(node)
         if node in self.scenes:
             self.scenes.remove(node)
+        del node
         if len(self.scenes) == 0:
             self.current_scene_id = None
 
     def connect_nodes(self, from_id, to_id):
-        from_node = None
-        to_node = None
-        for node in self.nodes:
-            if node.node_id == from_id:
-                from_node = node
-            if node.node_id == to_id:
-                to_node = node
+        from_node = self.get_node_by_id(from_id)
+        to_node = self.get_node_by_id(to_id)
         if from_node is None or to_node is None:
             raise Exception("Node not found")
         if to_node in from_node.connections:
@@ -110,6 +108,7 @@ class Controller:
                 environment.proceed_data()
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
+                    logging.info("Scene updated:\n" + str(scene.get_data()))
                     self.sender[1].dmx_data = scene.get_data()[1:] + [0]
                 # UPDATE FRONTEND
                 scene.end_cycle()
