@@ -21,8 +21,6 @@ class SetColorPlugin(Plugin):
 
     def proceed_data(self, projectors: typing.List[Projector]):
         for projector in projectors:
-            if projector.type == "Light" or projector.type == "Spot":
-                continue
             projector.data["r"]["is_changed"] = 1
             projector.data["g"]["is_changed"] = 1
             projector.data["b"]["is_changed"] = 1
