@@ -15,19 +15,6 @@ logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 # app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir="./profile")
 #   < === End of Supplementary Libraries === >
 
-
-@app.get('/api/ping')
-def ping():
-    @after_this_request
-    def add_header(response):
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
-
-    print(mainController.updates_counter)
-    print(mainController.current_scene_id)
-    print(mainController.get_node_by_id(mainController.current_scene_id).get_data())
-
-
 @app.get('/api/change')
 def change():
     @after_this_request
