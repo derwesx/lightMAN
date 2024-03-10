@@ -108,7 +108,6 @@ class Controller:
                 environment.proceed_data()
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
-                    logging.info("Scene updated:\n" + str(scene.get_data()))
                     self.sender[1].dmx_data = scene.get_data()[1:]
                 # UPDATE FRONTEND
                 scene.end_cycle()

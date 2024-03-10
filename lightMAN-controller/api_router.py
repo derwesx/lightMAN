@@ -53,10 +53,10 @@ def add_delete_environment_projectors():
         current_node = mainController.get_node_by_id(node_id)
         if str(request.url_rule) == '/api/environment/add':
             current_node.add(projector_id)
-            return jsonify({"status": "Projector successfully added to the environment"})
+            return jsonify({"status": "Projector successfully added to the environment"}), 200
         else:
             current_node.delete(projector_id)
-            return jsonify({"status": "Projector successfully deleted from the environment"})
+            return jsonify({"status": "Projector successfully deleted from the environment"}), 200
     except Exception as error:
         logging.info("Unexpected error: " + str(error))
         return jsonify({'reason': "Unexpected error"}), 401

@@ -1,3 +1,5 @@
+import logging
+
 from scene import Scene
 
 
@@ -24,6 +26,7 @@ class Environment:
                 break
 
     def delete(self, projector_id: int):
+        projector_id = int(projector_id)
         for projector in self.projectors:
             if int(projector.id) == int(projector_id):
                 projector.in_use = False
