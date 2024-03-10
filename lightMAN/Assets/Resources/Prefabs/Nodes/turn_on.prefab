@@ -568,6 +568,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4093105562195551815}
   m_SourcePrefab: {fileID: 100100000, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
+--- !u!1 &5630721396978004050 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3580235827559616420, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
+  m_PrefabInstance: {fileID: 9190679996467904502}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6435096541346606313 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2793873299087479583, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
@@ -586,9 +591,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   api_handler: {fileID: 0}
+  node_id: 
+  node_body: {fileID: 5630721396978004050}
   slider: {fileID: 6457795177301188767}
   brightness: 0
-  node_id: 
 --- !u!4 &7735062860946175511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1500732713714485729, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}

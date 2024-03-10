@@ -36,6 +36,14 @@ public class ApiHandler : MonoBehaviour
         uwr.SendWebRequest();
     }
     
+    public void disconnect(string node_start_id, string node_end_id)
+    {
+        Debug.Log("Disconnecting: " + node_start_id + " - " + node_end_id);
+        WWWForm form = new WWWForm();
+        UnityWebRequest uwr = UnityWebRequest.Post("localhost:8989/api/disconnect?from_node_id=" + node_start_id + "&to_node_id=" + node_end_id, form);
+        uwr.SendWebRequest();
+    }
+    
     public void create_node(string node_type)
     {
         Debug.Log("Creating new node with type " + node_type);
