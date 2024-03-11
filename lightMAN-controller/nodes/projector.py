@@ -46,6 +46,10 @@ class Wash(Projector):
         self.data["b"]["dmx_channel"] = dmx_start - 2
 
 
+class Washs(Wash):
+    ...
+
+
 class Light(Projector):
     keys = ["dim"]
 

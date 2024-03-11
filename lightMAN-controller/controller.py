@@ -17,6 +17,7 @@ NODE_NAME["set_color"] = "SetColorPlugin"
 NODE_NAME["environment"] = "Environment"
 NODE_NAME["scene"] = "Scene"
 NODE_NAME["translator"] = "Translator"
+NODE_NAME["position"] = "PositionPlugin"
 
 
 # <<<--- END OF CREATED PLUGINS --->>>
@@ -109,6 +110,7 @@ class Controller:
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
                     self.sender[1].dmx_data = scene.get_data()[1:]
+                    logging.info("updating scene: " + str(scene.get_data()[1:]));
                 # UPDATE FRONTEND
                 scene.end_cycle()
             for environment in self.environments:
