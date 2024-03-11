@@ -31,7 +31,7 @@ public class NodeController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
            
-            if(hit.collider != null)
+            if(hit != null && hit.collider != null)
             {
                 string other_node_id = hit.collider.gameObject.transform.parent.gameObject.transform.parent.gameObject.GetComponent<NodeController>().node_id;
                 if (hit.collider.name == "header" && other_node_id == node_id)

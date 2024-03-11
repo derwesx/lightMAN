@@ -16,16 +16,16 @@ public class ZoomHandler : MonoBehaviour
             is_moving = false;
         }
         
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray,Mathf.Infinity);
+           
+        if(hit.collider != null)
+        {
+            return;
+        }
+        
         if (Input.GetMouseButtonDown(click_to_move) || is_moving)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray,Mathf.Infinity);
-           
-            if(hit.collider != null)
-            {
-                return;
-            }
-            
             if (is_moving == false)
             {
                 previous_x = Input.mousePosition.x;

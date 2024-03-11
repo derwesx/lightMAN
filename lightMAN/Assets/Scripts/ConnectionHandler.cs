@@ -15,7 +15,7 @@ public class ConnectionHandler : MonoBehaviour
         return null;
     }
     
-    private List<LineRenderer> lines = new List<LineRenderer>();
+    public List<LineRenderer> lines = new List<LineRenderer>();
     
 	private GameObject get_node_by_id(string node_id)
 	{
@@ -64,6 +64,11 @@ public class ConnectionHandler : MonoBehaviour
                 counter += 1;
             }
         }
+		while (lines.Count > counter)
+		{ 
+			Destroy(lines[lines.Count - 1]);
+			lines.RemoveAt(lines.Count - 1);
+		}
     }
     void Update()
     {
@@ -71,7 +76,20 @@ public class ConnectionHandler : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-            if (hit == null || hit.collider == null)
+			if((hit == null || hit.collider == null) && node_start_id != "")
+			{
+				string node_to_remove_from = node_start_id;
+
+   	       		foreach(string node_to_id in connections[node_to_remove_from])
+       	   		{
+					api_handler.disconnect(node_to_remove_from, node_to_id);
+				}
+				HashSet<string> empty_hash_set = new HashSet<string>();
+				connections[node_to_remove_from] = empty_hash_set;
+                node_start_id = "";
+                node_end_id = "";
+				return;
+			} else if (hit == null || hit.collider == null)
             {
                 node_start_id = "";
                 node_end_id = "";
@@ -90,14 +108,8 @@ public class ConnectionHandler : MonoBehaviour
                     node_end_id = other_node_id;
 					Debug.Log("Got second point: " + node_end_id);
                 }
-
-                if (node_start_id == node_end_id || node_start_id == "" || node_end_id == "")
-                {
-                    node_start_id = "";
-                    node_end_id = "";
-                }
-                else
-                {
+                if (node_start_id != node_end_id && node_start_id != "" && node_end_id != "")
+				{
                     if (connections.ContainsKey(node_start_id))
                     {
                         connections[node_start_id].Add(node_end_id);
@@ -111,6 +123,8 @@ public class ConnectionHandler : MonoBehaviour
 					Debug.Log("Connecting: " + node_start_id + " - " + node_end_id);
                     api_handler.connect(node_start_id, node_end_id);
                 }
+                node_start_id = "";
+                node_end_id = "";
             }
         }
         if (Input.GetMouseButtonDown(0))
