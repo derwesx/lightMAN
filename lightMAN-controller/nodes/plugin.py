@@ -12,4 +12,5 @@ class Plugin(ABC):
     def send_data(self, projectors):
         deep_copy_projectors = copy.deepcopy(projectors)
         for connected_node in self.connections:
-            connected_node.proceed_data(deep_copy_projectors)
+            if connected_node is not None:
+                connected_node.proceed_data(deep_copy_projectors)
