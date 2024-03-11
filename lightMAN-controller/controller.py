@@ -34,7 +34,7 @@ class Controller:
     updates_counter = 0
 
     def __init__(self):
-        self.sender = sacn.sACNsender(fps=60)
+        self.sender = sacn.sACNsender(fps=120)
         self.sender.start()
         self.sender.activate_output(1)
         self.sender[1].multicast = True
@@ -110,7 +110,7 @@ class Controller:
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
                     self.sender[1].dmx_data = scene.get_data()[1:]
-                    logging.info("updating scene: " + str(scene.get_data()[1:]));
+                    logging.info("updating scene: " + str(scene.get_data()[1:]))
                 # UPDATE FRONTEND
                 scene.end_cycle()
             for environment in self.environments:

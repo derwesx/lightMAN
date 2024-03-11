@@ -47,6 +47,17 @@ class Wash(Projector):
 
 
 class Washs(Wash):
+    keys = ["dim", "shutter", "r", "g", "b"]
+
+    def calculate_channels(self, dmx_start):
+        self.data["dim"]["dmx_channel"] = dmx_start
+        self.data["r"]["dmx_channel"] = dmx_start + 1
+        self.data["g"]["dmx_channel"] = dmx_start + 2
+        self.data["b"]["dmx_channel"] = dmx_start + 3
+        self.data["shutter"]["dmx_channel"] = dmx_start + 5
+
+
+class Washl(Wash):
     ...
 
 
