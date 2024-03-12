@@ -18,6 +18,7 @@ NODE_NAME["environment"] = "Environment"
 NODE_NAME["scene"] = "Scene"
 NODE_NAME["translator"] = "Translator"
 NODE_NAME["position"] = "PositionPlugin"
+NODE_NAME["switch"] = "SwitchPlugin"
 
 
 # <<<--- END OF CREATED PLUGINS --->>>
