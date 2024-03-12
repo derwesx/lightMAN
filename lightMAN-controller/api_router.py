@@ -85,7 +85,7 @@ def connect_nodes():
         return jsonify({'reason': "Unexpected error"}), 401
 
 
-@app.post('/api/delete')
+@app.get('/api/delete')
 def delete_node():
     @after_this_request
     def add_header(response):

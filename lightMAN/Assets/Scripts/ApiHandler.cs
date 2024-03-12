@@ -66,6 +66,13 @@ public class ApiHandler : MonoBehaviour
         new_node.GetComponent<NodeController>().node_id = node_id;
         Debug.Log("Created node with id: " + node_id);
     }
+    
+    public void delete_node(string node_id)
+    {
+        Debug.Log("Deleting node: " + node_id);
+        UnityWebRequest uwr = UnityWebRequest.Get("localhost:8989/api/delete?node_id=" + node_id);
+        uwr.SendWebRequest();
+    }
 
     public void start()
     {

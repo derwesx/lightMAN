@@ -76,8 +76,9 @@ class Controller:
             self.environments.remove(node)
         if node in self.scenes:
             self.scenes.remove(node)
+        node.connections = []
         del node
-        if len(self.scenes) == 0:
+        if len(self.scenes) == 0 or self.get_node_by_id(node_id) is None:
             self.current_scene_id = None
 
     def connect_nodes(self, from_id, to_id):
