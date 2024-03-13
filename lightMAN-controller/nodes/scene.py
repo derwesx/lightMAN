@@ -2,6 +2,7 @@ import importlib
 import logging
 
 from projector import *
+from translator import Translator
 
 
 class Scene:
@@ -13,6 +14,8 @@ class Scene:
         return scene_data
 
     def __init__(self, node_id):
+        self.translator = Translator(-404)
+        self.translator.connections.append(self)
         self.node_id = node_id
 
     def load(self):
@@ -42,7 +45,11 @@ class Scene:
                 break
         # Frontend deletion
 
-    def proceed_data(self, dmx_in):
+    def proceed_data(self, projectors):
+        self.translator.proceed_data(projectors)
+
+    def proceed_data_dmx(self, dmx_in):
+        logging.info("Proceeding dmx.")
         for dmx_channel, dmx_value in dmx_in:
             self.dmx_data[dmx_channel] = dmx_value
 

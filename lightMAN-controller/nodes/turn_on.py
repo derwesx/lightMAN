@@ -5,7 +5,7 @@ from plugin import Plugin
 
 
 class TurnOnPlugin(Plugin):
-    brightness = 255
+    brightness = 0
 
     def __init__(self, node_id):
         self.connections = []

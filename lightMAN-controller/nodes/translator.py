@@ -25,5 +25,5 @@ class Translator:
                     continue
                 self.dmx_out.append([dmx_channel, value])
         for connected_node in self.connections:
-            connected_node.proceed_data(self.dmx_out)
+            connected_node.proceed_data_dmx(self.dmx_out)
         self.dmx_out = []

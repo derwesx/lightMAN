@@ -1,3 +1,4 @@
+import logging
 import typing
 import time
 
@@ -18,8 +19,10 @@ class SwitchPlugin(Plugin):
         ids = []
         for connection in self.connections:
             ids.append(connection.node_id)
+        logging.info(ids)
         need_id = self.get_group_from_time()
-        if need_id == -1:
+        logging.info(need_id)
+        if need_id == -1 or need_id >= len(ids) or need_id < 0:
             return -1
         else:
             return ids[need_id]
@@ -29,13 +32,10 @@ class SwitchPlugin(Plugin):
         difference = current_time - self.start_time
         no_of_cycle = difference // self.time_per_switch
         if len(self.connections):
-            return no_of_cycle % len(self.connections)
+            return int(no_of_cycle % len(self.connections))
         else:
             return -1
 
     def proceed_data(self, projectors: typing.List[Projector]):
         need_id = self.get()
-        for connected_node in self.connections:
-            if connected_node.node_id == need_id:
-                connected_node.proceed_data(projectors)
-                break
+        self.send_data(projectors, need_id)
