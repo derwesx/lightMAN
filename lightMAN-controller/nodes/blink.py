@@ -15,7 +15,7 @@ class BlinkPlugin(Plugin):
     def __init__(self, node_id):
         self.connections = []
         self.node_id = node_id
-        self.start_time = time.perf_counter()
+        self.start_time = 0
 
     def get_coefficient_from_time(self):
         current_time = time.perf_counter()

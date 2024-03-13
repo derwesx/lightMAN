@@ -11,9 +11,9 @@ class SwitchPlugin(Plugin):
     brightness = 255
 
     def __init__(self, node_id):
-        self.start_time = time.perf_counter()
         self.connections = []
         self.node_id = node_id
+        self.start_time = 0
 
     def get(self):
         ids = []
