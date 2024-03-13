@@ -70,6 +70,40 @@ public class ConnectionHandler : MonoBehaviour
 			lines.RemoveAt(lines.Count - 1);
 		}
     }
+
+	public void delete_connections_from_node(string node_id)
+	{
+		string node_to_remove_from = node_id;
+		if (connections.ContainsKey(node_to_remove_from))
+		{
+   	   		foreach(string node_to_id in connections[node_to_remove_from])
+       		{
+				api_handler.disconnect(node_to_remove_from, node_to_id);
+			}
+			HashSet<string> empty_hash_set = new HashSet<string>();
+			connections[node_to_remove_from] = empty_hash_set;
+	        node_start_id = "";
+        	node_end_id = "";
+		}
+		foreach (var node_connections in connections)
+        {
+            string node_from_id = node_connections.Key;
+            HashSet<string> nodes_to_id = node_connections.Value;
+			int isExists = 0;
+            foreach(string node_to_id in nodes_to_id)
+            {
+				if(node_to_id == node_id)
+				{
+					isExists = 1;
+				}
+            }
+			if(isExists == 1)
+			{
+				connections[node_from_id].Remove(node_id);
+			}
+        }
+	}
+
     void Update()
     {
         if (Input.GetMouseButtonUp(0))
@@ -78,16 +112,7 @@ public class ConnectionHandler : MonoBehaviour
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 			if((hit == null || hit.collider == null) && node_start_id != "")
 			{
-				string node_to_remove_from = node_start_id;
-
-   	       		foreach(string node_to_id in connections[node_to_remove_from])
-       	   		{
-					api_handler.disconnect(node_to_remove_from, node_to_id);
-				}
-				HashSet<string> empty_hash_set = new HashSet<string>();
-				connections[node_to_remove_from] = empty_hash_set;
-                node_start_id = "";
-                node_end_id = "";
+				delete_connections_from_node(node_start_id);
 				return;
 			} else if (hit == null || hit.collider == null)
             {

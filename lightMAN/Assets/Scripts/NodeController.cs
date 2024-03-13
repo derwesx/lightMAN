@@ -9,10 +9,12 @@ public class NodeController : MonoBehaviour
     private string moving_object_id = "";
 	
     public ApiHandler api_handler;
+    public ConnectionHandler connection_handler;
 	
 	void Start()
 	{
         api_handler = GameObject.Find("Api Handler").GetComponent<ApiHandler>();
+        connection_handler = GameObject.Find("Connection Handler").GetComponent<ConnectionHandler>();
 	}
 
     void Update()
@@ -54,8 +56,9 @@ public class NodeController : MonoBehaviour
         }
     }
 	public void delete_node(GameObject node)
-	{
+    {
+        connection_handler.delete_connections_from_node(node_id);
 		api_handler.delete_node(node_id);
 		Destroy(node);
-	}
+	}	
 }

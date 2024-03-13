@@ -2346,6 +2346,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.565
       objectReference: {fileID: 0}
+    - target: {fileID: 6869686621005683763, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.183
+      objectReference: {fileID: 0}
     - target: {fileID: 8404131508463368236, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
       propertyPath: m_Text
       value: Blink
