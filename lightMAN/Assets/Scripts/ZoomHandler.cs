@@ -15,33 +15,30 @@ public class ZoomHandler : MonoBehaviour
         {
             is_moving = false;
         }
-        
+
+        if (is_moving)
+        {
+            float current_x = Input.mousePosition.x;
+            float current_y = Input.mousePosition.y;
+            float d_x = (current_x - previous_x) / move_coef;
+            float d_y = (current_y - previous_y) / move_coef;
+            previous_x = current_x;
+            previous_y = current_y;
+            transform.position += new Vector3(-d_x, -d_y, 0);
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray,Mathf.Infinity);
-           
+        
         if(hit.collider != null)
         {
             return;
         }
         
-        if (Input.GetMouseButtonDown(click_to_move) || is_moving)
+        if (Input.GetMouseButtonDown(click_to_move))
         {
-            if (is_moving == false)
-            {
-                previous_x = Input.mousePosition.x;
-                previous_y = Input.mousePosition.y;
-                is_moving = true;
-            }
-            else
-            {
-                float current_x = Input.mousePosition.x;
-                float current_y = Input.mousePosition.y;
-                float d_x = (current_x - previous_x) / move_coef;
-                float d_y = (current_y - previous_y) / move_coef;
-                previous_x = current_x;
-                previous_y = current_y;
-                transform.position += new Vector3(-d_x, -d_y, 0);
-            }
+            previous_x = Input.mousePosition.x;
+            previous_y = Input.mousePosition.y;
+            is_moving = true;
         }
         
         float scrollDelta = Input.mouseScrollDelta.y;

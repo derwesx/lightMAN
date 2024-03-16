@@ -49,13 +49,14 @@ public class ConnectionHandler : MonoBehaviour
                 if (lines.Count <= counter)
                 {
                     var line = new GameObject().AddComponent<LineRenderer>();
-                    line.SetWidth(0.04F, 0.04F);
-                    Color c1 = Color.white;
-                    Color c2 = new Color(0, 0, 0, 0);
+                    line.startWidth = 0.08F;
+                    line.endWidth = 0.04F;
+					line.startColor = Color.white;
+					line.endColor = new Color(255, 255, 0, 50);
+					line.positionCount = 2;
                     line.material = new Material(Shader.Find("Sprites/Default"));
-                    line.SetColors(c1, c2);
-                    line.SetVertexCount(2);
                     lines.Add(line);
+                    Debug.Log("Created line");
                 }
                 Vector2 from_v3_pos = new Vector3(from_connection_out.transform.position.x, from_connection_out.transform.position.y, -3);
                 Vector2 to_v3_pos = new Vector3(to_connection_in.transform.position.x, to_connection_in.transform.position.y, -3);
@@ -65,43 +66,46 @@ public class ConnectionHandler : MonoBehaviour
             }
         }
 		while (lines.Count > counter)
-		{ 
+		{
+			Debug.Log("Destroyed line");
 			Destroy(lines[lines.Count - 1]);
 			lines.RemoveAt(lines.Count - 1);
 		}
     }
 
-	public void delete_connections_from_node(string node_id)
+	public void delete_connections_from_node(string node_id, bool is_begin)
 	{
-		string node_to_remove_from = node_id;
-		if (connections.ContainsKey(node_to_remove_from))
-		{
-   	   		foreach(string node_to_id in connections[node_to_remove_from])
-       		{
-				api_handler.disconnect(node_to_remove_from, node_to_id);
-			}
-			HashSet<string> empty_hash_set = new HashSet<string>();
-			connections[node_to_remove_from] = empty_hash_set;
-	        node_start_id = "";
-        	node_end_id = "";
-		}
-		foreach (var node_connections in connections)
-        {
-            string node_from_id = node_connections.Key;
-            HashSet<string> nodes_to_id = node_connections.Value;
-			int isExists = 0;
-            foreach(string node_to_id in nodes_to_id)
-            {
-				if(node_to_id == node_id)
-				{
-					isExists = 1;
-				}
-            }
-			if(isExists == 1)
+		if (is_begin) {
+			if (connections.ContainsKey(node_id))
 			{
-				connections[node_from_id].Remove(node_id);
+   	   			foreach(string node_to_id in connections[node_id])
+       			{
+					api_handler.disconnect(node_id, node_to_id);
+				}
+				HashSet<string> empty_hash_set = new HashSet<string>();
+				connections[node_id] = empty_hash_set;
+	       		node_start_id = "";
+        		node_end_id = "";
 			}
-        }
+		} else {
+			foreach (var node_connections in connections)
+        	{
+    	        string node_from_id = node_connections.Key;
+	            HashSet<string> nodes_to_id = node_connections.Value;
+				int isExists = 0;
+        	    foreach(string node_to_id in nodes_to_id)
+    	        {
+					if(node_to_id == node_id)
+					{
+						isExists = 1;
+					}
+    	        }
+				if(isExists == 1)
+				{
+					connections[node_from_id].Remove(node_id);
+				}
+        	}
+		}
 	}
 
     void Update()
@@ -110,11 +114,14 @@ public class ConnectionHandler : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-			if((hit == null || hit.collider == null) && node_start_id != "")
+			if(hit.collider == null && node_start_id != "")
 			{
-				delete_connections_from_node(node_start_id);
+				delete_connections_from_node(node_start_id, true);
 				return;
-			} else if (hit == null || hit.collider == null)
+			} else if(hit.collider == null && node_end_id != "") {
+				delete_connections_from_node(node_end_id, false);
+				return;				
+			} else if (hit.collider == null)
             {
                 node_start_id = "";
                 node_end_id = "";

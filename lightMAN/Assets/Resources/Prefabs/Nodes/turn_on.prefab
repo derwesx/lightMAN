@@ -553,6 +553,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: turn_on
       objectReference: {fileID: 0}
+    - target: {fileID: 7083302603014221234, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 27be87fe250d7d8b692ba1ac0f8cc1e4, type: 2}
     - target: {fileID: 8404131508463368236, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
       propertyPath: m_Text
       value: Turn On

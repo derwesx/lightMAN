@@ -15,7 +15,7 @@ public class set_color : default_node
         int r = (int)(R.value * 255);
         int g = (int)(G.value * 255);
         int b = (int)(B.value * 255);
-        node_body.GetComponent<Renderer>().material.color = new Color(R.value, G.value, B.value);
+        node_body.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(R.value, G.value, B.value));
         data["R"] = r.ToString();
         data["G"] = g.ToString();
         data["B"] = b.ToString();

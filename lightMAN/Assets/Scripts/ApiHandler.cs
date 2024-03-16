@@ -54,17 +54,25 @@ public class ApiHandler : MonoBehaviour
             continue;
         }
         string response = uwr.downloadHandler.text;
-        response = response.Trim('[', ']');
-        response = response.Replace("\"", "");
-        response = response.Replace("{", "");
-        response = response.Replace("}", "");
-        response = response.Replace("\n", "");
-        string[] keys = response.Split(',');
-        string node_id = keys[0].Split(':')[1];
-        // Creating an object
-        GameObject new_node = (GameObject)Instantiate(Resources.Load("Prefabs/Nodes/" + node_type));
-        new_node.GetComponent<NodeController>().node_id = node_id;
-        Debug.Log("Created node with id: " + node_id);
+        try
+        {
+            response = response.Trim('[', ']');
+            response = response.Replace("\"", "");
+            response = response.Replace("{", "");
+            response = response.Replace("}", "");
+            response = response.Replace("\n", "");
+            string[] keys = response.Split(',');
+            string node_id = keys[0].Split(':')[1];
+            // Creating an object
+            GameObject new_node = (GameObject)Instantiate(Resources.Load("Prefabs/Nodes/" + node_type));
+            new_node.GetComponent<NodeController>().node_id = node_id;
+            Debug.Log("Created node with id: " + node_id);
+        }
+        catch
+        {
+            Debug.Log("Error creating node: Api has not returned a valid node_id.");
+            return;
+        }
     }
     
     public void delete_node(string node_id)

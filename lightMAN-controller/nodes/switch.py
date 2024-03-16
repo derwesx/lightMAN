@@ -19,9 +19,7 @@ class SwitchPlugin(Plugin):
         ids = []
         for connection in self.connections:
             ids.append(connection.node_id)
-        logging.info(ids)
         need_id = self.get_group_from_time()
-        logging.info(need_id)
         if need_id == -1 or need_id >= len(ids) or need_id < 0:
             return -1
         else:
@@ -30,11 +28,14 @@ class SwitchPlugin(Plugin):
     def get_group_from_time(self):
         current_time = time.perf_counter()
         difference = current_time - self.start_time
-        no_of_cycle = difference // self.time_per_switch
-        if len(self.connections):
-            return int(no_of_cycle % len(self.connections))
-        else:
-            return -1
+        try:
+            no_of_cycle = difference // self.time_per_switch
+            if len(self.connections):
+                return int(no_of_cycle % len(self.connections))
+            else:
+                return -1
+        except:
+            pass
 
     def proceed_data(self, projectors: typing.List[Projector]):
         need_id = self.get()

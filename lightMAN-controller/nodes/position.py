@@ -18,5 +18,4 @@ class PositionPlugin(Plugin):
             projector.data["pan"]["value"] = self.pan
             projector.data["tilt"]["is_changed"] = 1
             projector.data["tilt"]["value"] = self.tilt
-        for connected_node in self.connections:
-            connected_node.proceed_data(projectors)
+        self.send_data(projectors)

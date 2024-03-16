@@ -49,7 +49,6 @@ class Scene:
         self.translator.proceed_data(projectors)
 
     def proceed_data_dmx(self, dmx_in):
-        logging.info("Proceeding dmx.")
         for dmx_channel, dmx_value in dmx_in:
             self.dmx_data[dmx_channel] = dmx_value
 

@@ -21,7 +21,7 @@ public class blink : default_node
         float timeS = timecycle.value;
         groupsCount = (int)groupsCounter.value;
         float coef = brightness.value;
-        node_body.GetComponent<Renderer>().material.color = new Color(coef, coef, 0);
+        node_body.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(coef, coef, 0));
         data["brightness"] = ((int)(coef * coef * 255)).ToString();
         data["count_of_groups"] = groupsCount.ToString();
         ColorBlock cb = turn_one.colors;
