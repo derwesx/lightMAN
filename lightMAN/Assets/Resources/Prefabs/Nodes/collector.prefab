@@ -50,7 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2793873299087479583, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
       propertyPath: m_Name
-      value: translator
+      value: collector
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675657699215761510, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
+      propertyPath: m_Text
+      value: Collector
       objectReference: {fileID: 0}
     - target: {fileID: 7083302603014221234, guid: e5ee5781666d7f5e2ae7750aaca5a91c, type: 3}
       propertyPath: m_Materials.Array.data[0]

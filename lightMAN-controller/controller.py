@@ -22,6 +22,7 @@ NODE_NAME["switch"] = "SwitchPlugin"
 NODE_NAME["collector"] = "Collector"
 NODE_NAME["shutter"] = "Shutter"
 
+
 # <<<--- END OF CREATED PLUGINS --->>>
 
 def get_new_id():

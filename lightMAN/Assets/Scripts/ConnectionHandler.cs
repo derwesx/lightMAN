@@ -16,7 +16,7 @@ public class ConnectionHandler : MonoBehaviour
     }
     
     public List<LineRenderer> lines = new List<LineRenderer>();
-    
+    private LineRenderer handle_connection;
 	private GameObject get_node_by_id(string node_id)
 	{
 		GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
@@ -108,26 +108,56 @@ public class ConnectionHandler : MonoBehaviour
 		}
 	}
 
+	void Start()
+	{
+		handle_connection = new GameObject().AddComponent<LineRenderer>();
+		handle_connection.startWidth = 0.08F;
+		handle_connection.endWidth = 0.08F;
+		handle_connection.startColor = new Color(255, 0, 0, 20);
+		handle_connection.endColor = new Color(255, 0, 255, 20);
+		handle_connection.positionCount = 0;
+		handle_connection.material = new Material(Shader.Find("Sprites/Default"));
+	}
+	
     void Update()
     {
+	    if (node_start_id != "" || node_end_id != "")
+	    {
+		    var node_obj = get_node_by_id(node_start_id + node_end_id);
+		    Vector3 connection_position;
+		    Vector3 to_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		    if (node_obj != null) 
+		    {
+			    if (node_start_id != "")
+			    {
+				    var from_connection_out = getChildGameObject(node_obj, "connect_out");
+				    connection_position = from_connection_out.transform.position;
+			    }
+			    else
+			    {
+				    var to_connection_in = getChildGameObject(node_obj, "connect_in");
+				    connection_position = to_connection_in.transform.position;
+			    }
+
+			    connection_position.z = 0;
+			    to_position.z = 0;
+			    handle_connection.positionCount = 2;
+			    handle_connection.SetPosition(0, connection_position);
+			    handle_connection.SetPosition(1, to_position);
+		    }
+	    }
         if (Input.GetMouseButtonUp(0))
         {
+	        handle_connection.positionCount = 0;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 			if(hit.collider == null && node_start_id != "")
 			{
 				delete_connections_from_node(node_start_id, true);
-				return;
 			} else if(hit.collider == null && node_end_id != "") {
 				delete_connections_from_node(node_end_id, false);
-				return;				
-			} else if (hit.collider == null)
-            {
-                node_start_id = "";
-                node_end_id = "";
-                return;
-            }
-            else
+			}
+            else if(hit.collider != null)
             {
                 if (hit.collider.name == "connect_out")
                 {
@@ -155,9 +185,9 @@ public class ConnectionHandler : MonoBehaviour
 					Debug.Log("Connecting: " + node_start_id + " - " + node_end_id);
                     api_handler.connect(node_start_id, node_end_id);
                 }
-                node_start_id = "";
-                node_end_id = "";
             }
+            node_start_id = "";
+            node_end_id = "";
         }
         if (Input.GetMouseButtonDown(0))
         {

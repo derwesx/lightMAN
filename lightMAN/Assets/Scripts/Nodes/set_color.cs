@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class set_color : default_node
 {
@@ -9,16 +11,20 @@ public class set_color : default_node
     public Slider R;
     public Slider G;
     public Slider B;
+	
+    [SerializeField] Texture2D colorChart;
+    [SerializeField] GameObject chart;
 
-    public void on_change()
+    public void PickColor()
     {
-        int r = (int)(R.value * 255);
-        int g = (int)(G.value * 255);
-        int b = (int)(B.value * 255);
-        node_body.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(R.value, G.value, B.value));
-        data["R"] = r.ToString();
-        data["G"] = g.ToString();
-        data["B"] = b.ToString();
+        Vector3 local_position = Camera.main.ScreenToWorldPoint(Input.mousePosition) - chart.transform.position;
+		local_position.x += chart.transform.GetComponent<RectTransform>().rect.width / 2;
+		local_position.y += chart.transform.GetComponent<RectTransform>().rect.height / 2;
+    	Color pickedColor = colorChart.GetPixel((int)(local_position.x * (colorChart.width / chart.transform.GetComponent<RectTransform>().rect.width)), (int)(local_position.y * (colorChart.height / chart.transform.GetComponent<RectTransform>().rect.height)));
+    	node_body.GetComponent<Renderer>().material.SetColor("_EmissionColor", pickedColor);
+        data["R"] = ((int)(pickedColor.r * 255)).ToString();
+        data["G"] = ((int)(pickedColor.g * 255)).ToString();
+        data["B"] = ((int)(pickedColor.b * 255)).ToString();
         api_handler.change(node_id, data);
     }
 }
