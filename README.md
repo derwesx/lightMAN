@@ -21,5 +21,9 @@ Currently, project is build from 2 parts:
 First release version will be published before the end of May 2024.
 ## Screenshots
 
-![App Screenshot](nodes.png)
+### Version 1.1
+![v1.1](disco.png)
 
+
+### Version 1.0
+![v1.0](nodes.png)
