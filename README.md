@@ -18,7 +18,6 @@ Currently, project is build from 2 parts:
     1. Python Backend with API
     2. Unity Visualizer
 
-First release version will be published before the end of May 2024.
 ## Screenshots
 
 ### Version 1.1
