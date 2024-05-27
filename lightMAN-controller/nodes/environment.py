@@ -1,6 +1,6 @@
 import logging
 
-from scene import Scene
+from .scene import Scene
 
 
 # All purposes of the environment is to track projectors

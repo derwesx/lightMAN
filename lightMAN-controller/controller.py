@@ -1,10 +1,15 @@
 import logging
+import random
 from threading import Thread
 import importlib
 import time
 import uuid
 
-import sacn
+# SACN
+# import sacn
+
+# Open DMX
+from DmxPy import DmxPy
 
 from nodes import *
 
@@ -37,11 +42,13 @@ class Controller:
     updates_counter = 0
 
     def __init__(self):
-        self.sender = sacn.sACNsender(fps=60)
-        self.sender.start()
-        self.sender.activate_output(1)
-        self.sender[1].multicast = True
+        # self.sender = sacn.sACNsender(fps=60)
+        # self.sender.start()
+        # self.sender.activate_output(1)
+        # self.sender[1].multicast = True
         self.update_thread = Thread(target=self.update)
+        self.OpenDMX = DmxPy('/dev/ttyUSB0')
+        self.OpenDMX.serial.send_break()
 
     def start(self):
         self.update_thread.run()
@@ -53,7 +60,7 @@ class Controller:
         return None
 
     def create_node(self, node_type: str):
-        node_module = importlib.import_module(node_type)
+        node_module = importlib.import_module('nodes.' + node_type)
         try:
             class_ = getattr(node_module, NODE_NAME[node_type])
         except Exception as error:
@@ -106,15 +113,29 @@ class Controller:
             raise Exception("Node not found")
         from_node.connections.remove(to_node)
 
+    projectors_config = {65: 93, 67: 223, 70: 255, 76: 210, 79: 255, 83: 74, 85: 229, 88: 255, 94: 210, 101: 75,
+                         103: 229,
+                         106: 255, 112: 210, 115: 255, 119: 87, 121: 230, 124: 255, 130: 210, 133: 255, 71: 255,
+                         89: 255, 107: 255, 125: 255, 12: 255, 28: 255, 44: 255, 60: 255}
+
     def update(self):
+        last_data = None
         while True:
-            time.sleep(0.005)
             self.updates_counter += 1
             for environment in self.environments:
                 environment.proceed_data()
             for scene in self.scenes:
                 if scene.node_id == self.current_scene_id:
-                    self.sender[1].dmx_data = scene.get_data()[1:]
+                    current_data = scene.get_data()
+                    for key in self.projectors_config:
+                        current_data[key] = self.projectors_config[key]
+                    # self.sender[1].dmx_data = scene.get_data()[1:]
+                    self.OpenDMX.setFull(current_data)
+                    # if last_data != current_data:
+                    #     self.OpenDMX.serial.send_break()
+                    self.OpenDMX.serial.send_break()
+                    self.OpenDMX.render()
+                    last_data = current_data
                 # UPDATE FRONTEND
                 scene.end_cycle()
             for environment in self.environments:

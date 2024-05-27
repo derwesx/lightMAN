@@ -1,7 +1,7 @@
 import typing
 
-from projector import *
-from plugin import Plugin
+from .projector import *
+from .plugin import Plugin
 
 
 class Shutter(Plugin):

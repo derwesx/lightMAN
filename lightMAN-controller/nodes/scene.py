@@ -1,8 +1,8 @@
 import importlib
 import logging
 
-from projector import *
-from translator import Translator
+from .projector import *
+from .translator import Translator
 
 
 class Scene:
@@ -28,7 +28,7 @@ class Scene:
             projector_id, projector_type, dmx_start = projector[0], projector[1], projector[3]
             projector_type = projector_type.title()
             try:
-                projector_module = importlib.import_module("projector")
+                projector_module = importlib.import_module("nodes.projector")
                 _projector_class = getattr(projector_module, projector_type)
                 self.projectors.append(_projector_class(projector_id, dmx_start))
             except Exception as error:

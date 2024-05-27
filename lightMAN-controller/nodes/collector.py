@@ -1,7 +1,7 @@
 import typing
 
-from projector import Projector
-from plugin import Plugin
+from .projector import Projector
+from .plugin import Plugin
 
 
 class Collector(Plugin):

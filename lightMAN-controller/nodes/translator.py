@@ -1,6 +1,6 @@
 import typing
 
-from projector import Projector
+from .projector import Projector
 
 
 class Translator:

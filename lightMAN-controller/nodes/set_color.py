@@ -3,8 +3,8 @@ import random
 import typing
 import time
 
-from projector import *
-from plugin import Plugin
+from .projector import *
+from .plugin import Plugin
 
 
 # PLUGIN SHOULD GIVE ONLY MEANINGFUL DMX_CHANNELS DATA

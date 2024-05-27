@@ -32,13 +32,49 @@ class Projector:
         ...  # Calculate channels according to the type
 
 
+class Washh(Projector):
+    keys = ["dim", "zoom", "shutter", "pan", "tilt", "r", "g", "b"]
+
+    def calculate_channels(self, dmx_start):
+        self.data["pan"]["dmx_channel"] = dmx_start  # 1
+        self.data["tilt"]["dmx_channel"] = dmx_start + 2  # 3
+        self.data["dim"]["dmx_channel"] = dmx_start + 5  # Dimmer
+        self.data["shutter"]["dmx_channel"] = dmx_start + 6  # SHUTTER
+        self.data["r"]["dmx_channel"] = dmx_start + 7  # projector id = 1
+        self.data["g"]["dmx_channel"] = dmx_start + 8  # dmx_start = 4
+        self.data["b"]["dmx_channel"] = dmx_start + 9  # rgb 8 9 10
+        self.data["zoom"]["dmx_channel"] = dmx_start + 11  # ZOOM
+
+
+class Spott(Projector):
+    keys = ["dim", "zoom", "focus", "color", "shutter", "pan", "tilt"]
+
+    def calculate_channels(self, dmx_start):
+        self.data["pan"]["dmx_channel"] = dmx_start
+        self.data["tilt"]["dmx_channel"] = dmx_start + 2
+        self.data["dim"]["dmx_channel"] = dmx_start + 5
+        self.data["shutter"]["dmx_channel"] = dmx_start + 6
+        self.data["color"]["dmx_channel"] = dmx_start + 7
+        self.data["focus"]["dmx_channel"] = dmx_start + 11
+        self.data["zoom"]["dmx_channel"] = dmx_start + 14
+
+
+class Rgb(Projector):
+    keys = ["r", "g", "b"]
+
+    def calculate_channels(self, dmx_start):
+        self.data["r"]["dmx_channel"] = dmx_start
+        self.data["g"]["dmx_channel"] = dmx_start + 1
+        self.data["b"]["dmx_channel"] = dmx_start + 2
+
+
 class Wash(Projector):
     keys = ["dim", "zoom", "shutter", "pan", "tilt", "r", "g", "b"]
 
     def calculate_channels(self, dmx_start):
         self.data["dim"]["dmx_channel"] = dmx_start
-        self.data["zoom"]["dmx_channel"] = dmx_start + 2
         self.data["shutter"]["dmx_channel"] = dmx_start + 1
+        self.data["zoom"]["dmx_channel"] = dmx_start + 2
         self.data["pan"]["dmx_channel"] = dmx_start - 6
         self.data["tilt"]["dmx_channel"] = dmx_start - 5
         self.data["r"]["dmx_channel"] = dmx_start - 4
