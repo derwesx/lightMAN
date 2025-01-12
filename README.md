@@ -11,13 +11,6 @@ Used by junior lighting designers to get their first experience of mixing color 
 - [@DerwesX](https://github.com/derwesx) - Member of Letovo Stage Crew group.
 
 
-## Demo
-
-Currently, project is build from 2 parts:
-
-    1. Python Backend with API
-    2. Unity Visualizer
-
 ## Screenshots
 
 ### Version 1.1
